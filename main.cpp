@@ -8,7 +8,7 @@
 
 int randomGenerate()
 {
-    return rand() % 10 + 10;
+    return rand() % 30 + 10;
 }
 
 Tree *createTree()
@@ -221,6 +221,7 @@ void tab(int num)
 
 int main()
 {
+	system("MODE con cols=270 lines=120");
     srand(time(NULL));
     Tree *T = NULL;
     List *L = NULL;
@@ -229,8 +230,8 @@ int main()
     printList(L);
     T = buildTree(L, 0);
     
-    gotoxy(44, countNodes(T) + 3);
+    gotoxy(80, countNodes(T) + 3);
     printf("Exibindo a arvore");
-    printTree(T, 47, countNodes(T) + 6, 20);
+    printTree(T, 90, countNodes(T) + 6, 40);
     printf("\n\n\n\n\n\n\n\n");
 }
