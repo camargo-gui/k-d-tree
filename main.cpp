@@ -167,7 +167,11 @@ Tree *buildTree(List *L, int level)
     else
     {
         List *aux;
-        aux = median(L, end(L)); // retorna o elemento do meio e divide a lista em duas
+        if (level % 2 == 0)
+            orderByX(&L);
+        else
+            orderByY(&L);
+        aux = median(L, end(L));
         Tree *T = aux->tree;
         T->left = buildTree(L, level + 1);
         T->right = buildTree(aux->next, level + 1);
@@ -213,4 +217,5 @@ int main()
     orderByX(&L);
     printList(L);
     T = buildTree(L, 0);
-    }
+    printf("\n\n");
+}
