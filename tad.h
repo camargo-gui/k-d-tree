@@ -15,3 +15,7 @@ struct list{
 };
 
 typedef struct list List;
+
+char Folha(Tree *T){
+   return T -> left == NULL && T -> right == NULL;
+}

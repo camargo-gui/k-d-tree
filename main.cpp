@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <conio2.h>
 #include "tad.h"
 #include <time.h>
 
 int randomGenerate()
 {
-    return rand() % 50 + 10;
+    return rand() % 10 + 10;
 }
 
 Tree *createTree()
@@ -148,8 +149,8 @@ int countElements(List *L)
     int count = 0;
     while (L != NULL)
     {
-        L = L->next;
         count++;
+        L = L->next;
     }
     return count;
 }
@@ -200,6 +201,16 @@ int countNodes(Tree *T)
     }
 }
 
+void printTree(Tree *tree, int x, int y, int space){
+    if(tree != NULL){
+        gotoxy(x, y);
+        printf("(%d, %d)", tree->d.x, tree->d.y);
+        
+    	printTree(tree -> left, x-space, y+2, space/2);
+    	printTree(tree -> right, x+space, y+2, space/2);
+    }
+}
+
 void tab(int num)
 {
     for (int i = 0; i < num; i++)
@@ -217,5 +228,9 @@ int main()
     orderByX(&L);
     printList(L);
     T = buildTree(L, 0);
-    printf("\n\n");
+    
+    gotoxy(44, countNodes(T) + 3);
+    printf("Exibindo a arvore");
+    printTree(T, 47, countNodes(T) + 6, 20);
+    printf("\n\n\n\n\n\n\n\n");
 }
