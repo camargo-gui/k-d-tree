@@ -8,7 +8,7 @@
 
 int randomGenerate()
 {
-    return rand() % 10 + 10;
+    return rand() % 90 + 10;
 }
 
 Tree *createTree()
@@ -45,6 +45,59 @@ void insertList(List **L, Tree *T)
         }
         aux->next = createList(T);
     }
+}
+
+void printList(List *L)
+{
+    while (L != NULL)
+    {
+        printf("(%d,%d)\n", L->tree->d.x, L->tree->d.y);
+        L = L->next;
+    }
+}
+
+float distance(Tree *T1, Tree *T2)
+{
+    return sqrt(pow(T1->d.x - T2->d.x, 2) + pow(T1->d.y - T2->d.y, 2));
+}
+
+char itsInside(Tree *T, Tree *point, int radius)
+{
+    if (distance(T, point) - radius <= 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void closerPoint(Tree *tree)
+{
+    int radius = 10;
+    Tree *point = createTree(), *aux;
+    List *queueTree = NULL;
+    List *queueCloserPoints = NULL;
+    enqueue(&queueTree, tree);
+    while (queueTree != NULL)
+    {
+        dequeue(&queueTree, &aux);
+        if (aux->left != NULL)
+        {
+            enqueue(&queueTree, aux->left);
+        }
+        if (aux->right != NULL)
+        {
+            enqueue(&queueTree, aux->right);
+        }
+        if (aux != NULL && distance(aux, point) - radius <= 0)
+        {
+            enqueue(&queueCloserPoints, aux);
+        }
+    }
+    printf("\n\n\nPontos proximos ao ponto: (%d,%d) com raio %d\n", point->d.x, point->d.y, radius);
+    printList(queueCloserPoints);
 }
 
 void orderByX(List **L)
@@ -180,15 +233,6 @@ Tree *buildTree(List *L, int level)
     }
 }
 
-void printList(List *L)
-{
-    while (L != NULL)
-    {
-        printf("(%d,%d)\n", L->tree->d.x, L->tree->d.y);
-        L = L->next;
-    }
-}
-
 int countNodes(Tree *T)
 {
     if (T == NULL)
@@ -205,7 +249,7 @@ void printTree(Tree *tree, int x, int y, int space){
     if(tree != NULL){
         gotoxy(x, y);
         printf("(%d, %d)", tree->d.x, tree->d.y);
-        
+
     	printTree(tree -> left, x-space, y+2, space/2);
     	printTree(tree -> right, x+space, y+2, space/2);
     }
@@ -228,9 +272,9 @@ int main()
     orderByX(&L);
     printList(L);
     T = buildTree(L, 0);
-    
     gotoxy(44, countNodes(T) + 3);
     printf("Exibindo a arvore");
     printTree(T, 47, countNodes(T) + 6, 20);
     printf("\n\n\n\n\n\n\n\n");
+    closerPoint(T);
 }
