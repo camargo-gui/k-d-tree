@@ -75,25 +75,42 @@ char itsInside(Tree *T, Tree *point, int radius)
 
 void closerPoint(Tree *tree)
 {
-    int radius = 10;
+    int radius = 10, found = 0;
     Tree *point = createTree(), *aux;
     List *queueTree = NULL;
     List *queueCloserPoints = NULL;
+    float distanceBetween = 0;
     enqueue(&queueTree, tree);
     while (queueTree != NULL)
     {
         dequeue(&queueTree, &aux);
-        if (aux->left != NULL)
+        distanceBetween = distance(aux, point);
+        if (distanceBetween - radius <= 0)
         {
-            enqueue(&queueTree, aux->left);
-        }
-        if (aux->right != NULL)
-        {
-            enqueue(&queueTree, aux->right);
-        }
-        if (aux != NULL && distance(aux, point) - radius <= 0)
-        {
+            found = 1;
             enqueue(&queueCloserPoints, aux);
+            if (aux->left != NULL)
+            {
+                enqueue(&queueTree, aux->left);
+            }
+            if (aux->right != NULL)
+            {
+                enqueue(&queueTree, aux->right);
+            }
+        }
+        else
+        {
+            if (!found)
+            {
+                if (aux->left != NULL)
+                {
+                    enqueue(&queueTree, aux->left);
+                }
+                if (aux->right != NULL)
+                {
+                    enqueue(&queueTree, aux->right);
+                }
+            }
         }
     }
     printf("\n\n\nPontos proximos ao ponto: (%d,%d) com raio %d\n", point->d.x, point->d.y, radius);
@@ -179,7 +196,6 @@ List *median(List *start, List *end)
 List *buildList()
 {
     List *L = NULL;
-    List *aux = L;
     int n = randomGenerate();
     for (int i = 0; i < n; i++)
     {
