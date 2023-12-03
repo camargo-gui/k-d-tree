@@ -3,12 +3,13 @@
 #include <string.h>
 #include <math.h>
 #include <conio2.h>
+#include <windows.h>
 #include "tad.h"
 #include <time.h>
 
 int randomGenerate()
 {
-    return rand() % 90 + 10;
+    return rand() % 15 + 10;
 }
 
 Tree *createTree()
@@ -226,6 +227,8 @@ int countElements(List *L)
 
 Tree *buildTree(List *L, int level)
 {
+	List *aux;
+	Tree *T;
     if (L == NULL)
     {
         return NULL;
@@ -236,13 +239,12 @@ Tree *buildTree(List *L, int level)
     }
     else
     {
-        List *aux;
         if (level % 2 == 0)
             orderByX(&L);
         else
             orderByY(&L);
         aux = median(L, end(L));
-        Tree *T = aux->tree;
+        T = aux->tree;
         T->left = buildTree(L, level + 1);
         T->right = buildTree(aux->next, level + 1);
         return T;
@@ -264,10 +266,10 @@ int countNodes(Tree *T)
 void printTree(Tree *tree, int x, int y, int space){
     if(tree != NULL){
         gotoxy(x, y);
-        printf("(%d, %d)", tree->d.x, tree->d.y);
+        printf("(%d,%d)", tree->d.x, tree->d.y);
 
-    	printTree(tree -> left, x-space, y+2, space/2);
-    	printTree(tree -> right, x+space, y+2, space/2);
+    	printTree(tree -> left, x-space, y+3, space/2);
+    	printTree(tree -> right, x+space, y+3, space/2);
     }
 }
 
@@ -281,6 +283,8 @@ void tab(int num)
 
 int main()
 {
+	HWND hwnd = GetConsoleWindow();
+    ShowWindow(hwnd, SW_MAXIMIZE);
     srand(time(NULL));
     Tree *T = NULL;
     List *L = NULL;
@@ -290,7 +294,7 @@ int main()
     T = buildTree(L, 0);
     gotoxy(44, countNodes(T) + 3);
     printf("Exibindo a arvore");
-    printTree(T, 47, countNodes(T) + 6, 20);
+    printTree(T, 80, countNodes(T) + 6, 20);
     printf("\n\n\n\n\n\n\n\n");
     closerPoint(T);
 }
